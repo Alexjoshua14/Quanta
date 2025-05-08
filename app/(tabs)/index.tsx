@@ -1,4 +1,6 @@
 import TodoList from "@/components/TodoList";
+import { Colors } from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
 import dayjs from "dayjs";
 import { useCallback, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,10 +18,16 @@ export default function Today() {
     setAddTodoModalVisible(false);
   }, []);
 
+  /** Theme colors */
+  const colorScheme = useColorScheme();
+
+  const backgroundColor = colorScheme === "dark" ? Colors.dark.background : Colors.light.background;
+
   return (
     <SafeAreaView
       edges={["top", "left", "right"]}
-      className="flex-1 bg-primary"
+      style={{ backgroundColor }}
+      className="flex-1"
     >
       <TodoList dateKey={dateKey} />
     </SafeAreaView>
