@@ -2,6 +2,7 @@
  * All the gestures for the TodoCard
  */
 
+import { Dimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { GestureDetectorProps } from "react-native-gesture-handler/lib/typescript/handlers/gestures/GestureDetector";
 import Animated, {
@@ -11,13 +12,14 @@ import Animated, {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
-  withSpring
+  withSpring,
+  withTiming
 } from "react-native-reanimated";
 
 /**
  * Props for the TodoCardGesture component
  * 
- * @param onSwipeLeft - Callback for when the user swipes left
+ * @param onSwipeLeft - Callback for when the user swipes left (delete)
  * @param onSwipeRight - Callback for when the user swipes right
  * @param onSwipeHorizontal - Callback for when the user swipes either direction horizontally
  * @param onLongPress - Callback for when the user long presses
@@ -44,6 +46,9 @@ const SPRING_CONFIG = {
   mass: 0.8,
   velocity: 0.5,
 };
+
+// Device screen width – used to slide card completely off‑screen on delete
+const SCREEN_WIDTH = Dimensions.get("window").width;
 
 // Animation configuration
 const TAP_SCALE = 0.97;
@@ -93,18 +98,29 @@ export const TodoCardGesture = ({
     })
     .onEnd((event) => {
       isPressed.value = false;
+      const { translationX } = event;
 
-      if (Math.abs(event.translationX) > SWIPE_THRESHOLD) {
-        // Trigger appropriate callback
-        if (event.translationX > 0) {
-          onSwipeRight && runOnJS(onSwipeRight)();
-        } else {
-          onSwipeLeft && runOnJS(onSwipeLeft)();
-        }
+      if (translationX < -SWIPE_THRESHOLD) {
+        // Swipe‑left → delete
+        translateX.value = withTiming(-SCREEN_WIDTH, { duration: 250 }, (finished) => {
+          if (finished) {
+            onSwipeLeft && runOnJS(onSwipeLeft)();
+            onSwipeHorizontal && runOnJS(onSwipeHorizontal)();
+            // Reset for recycled render (in case list item persists in memory)
+            translateX.value = 0;
+            scale.value = 1;
+          }
+        });
+        return;
+      }
+
+      if (translationX > SWIPE_THRESHOLD) {
+        // Swipe‑right
+        onSwipeRight && runOnJS(onSwipeRight)();
         onSwipeHorizontal && runOnJS(onSwipeHorizontal)();
       }
 
-      // Reset position with spring animation
+      // Not past threshold → snap back
       translateX.value = withSpring(0, SPRING_CONFIG);
       scale.value = withSpring(1, SPRING_CONFIG);
     });
@@ -132,7 +148,7 @@ export const TodoCardGesture = ({
       console.log("long press end");
     });
 
-  const composedGesture = Gesture.Race(
+  const composedGesture = Gesture.Simultaneous(
     tap,
     longPress,
     swipeHorizontal
