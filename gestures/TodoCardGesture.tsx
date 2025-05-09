@@ -2,6 +2,7 @@
  * All the gestures for the TodoCard
  */
 
+import * as Haptic from "expo-haptics";
 import { Dimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { GestureDetectorProps } from "react-native-gesture-handler/lib/typescript/handlers/gestures/GestureDetector";
@@ -15,7 +16,6 @@ import Animated, {
   withSpring,
   withTiming
 } from "react-native-reanimated";
-
 /**
  * Props for the TodoCardGesture component
  * 
@@ -141,6 +141,7 @@ export const TodoCardGesture = ({
     .onStart(() => {
       scale.value = withSpring(LONG_PRESS_SCALE, SPRING_CONFIG);
       onLongPress && runOnJS(onLongPress)();
+      runOnJS(Haptic.impactAsync)(Haptic.ImpactFeedbackStyle.Medium);
       console.log("long press start");
     })
     .onEnd(() => {

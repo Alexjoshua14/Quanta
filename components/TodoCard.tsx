@@ -1,9 +1,10 @@
 import { Colors } from "@/constants/Colors";
 import { TodoCardGesture } from "@/gestures/TodoCardGesture";
 import { Todo, useTodos } from "@/store/useTodos";
+import * as Haptic from "expo-haptics";
 import React, { useEffect, useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, useColorScheme, View } from "react-native";
-import Animated, { LinearTransition } from "react-native-reanimated";
+import Animated, { LinearTransition, runOnJS } from "react-native-reanimated";
 
 
 /**
@@ -54,6 +55,7 @@ export default function TodoCard({
 
   const onLongPress = () => {
     setOpen((prev) => !prev);
+    runOnJS(Haptic.impactAsync)(Haptic.ImpactFeedbackStyle.Heavy);
   }
 
   const onSwipeLeft = () => {

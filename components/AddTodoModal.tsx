@@ -9,7 +9,8 @@
  */
 
 import { Recurrence, useTodos } from "@/store/useTodos";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import type { TextInput as RNTextInput } from 'react-native';
 import { Modal, SafeAreaView, Text, View } from "react-native";
 import { RadioButton, TextInput } from "react-native-paper";
 import RecurrenceButton from "./buttons/RecurrenceButton";
@@ -23,6 +24,9 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
   const [note, setNote] = useState("");
   const [category, setCategory] = useState("");
   const [recurrence, setRecurrence] = useState<Recurrence>("none");
+
+  const titleInputRef = useRef<RNTextInput>(null);
+  const noteInputRef = useRef<RNTextInput>(null);
 
   // TODO: Focus on title input when modal is shown
 
@@ -61,7 +65,9 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
             value={title}
             onChangeText={setTitle}
             className="todo-title bg-primary"
-            onSubmitEditing={save}
+            onSubmitEditing={() => noteInputRef.current?.focus()}
+            autoFocus={true}
+            ref={titleInputRef}
           />
           <TextInput
             label="Notes (optional)"
@@ -76,6 +82,7 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
             onChangeText={setNote}
             className="todo-note bg-primary"
             onSubmitEditing={save}
+            ref={noteInputRef}
           />
 
           <RadioButton.Group
