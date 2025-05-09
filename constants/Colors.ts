@@ -71,3 +71,9 @@ export const zenTheme = {
     },
   },
 };
+
+export function themeColors(scheme: "light" | "dark") {
+  return scheme === "dark"
+    ? { text: Colors.dark.text, textSecondary: Colors.dark.textSecondary }
+    : { text: Colors.light.text, textSecondary: Colors.light.textSecondary };
+}
