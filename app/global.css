@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+* Each screen should take up the full screen but
+* have padding for iPhone notch
+*/
+.screen {
+  @apply flex-1 bg-white dark:bg-black pb-20;
+}
+
+.screen-header {
+  @apply text-2xl text-center text-gray-500 dark:text-neutral-400;
+}
+
+/**
+* Set the font family for the app
+*/
+/* @layer base {
+  html {
+    @apply font-commissioner font-bold bg-pink-500;
+  }
+} */
+
+/**
+* Set the font family and make space for the tab bar
+*/
+.screen {
+  @apply font-commissioner font-bold bg-slate-300 pb-24;
+}
+
+.todo-title {
+  @apply text-lg font-light dark:text-white;
+}
+
+.todo-card {
+  @apply p-4;
+}
+
+.todo-note {
+  @apply text-sm 
+  /* text-gray-600 dark:text-neutral-300; */;
+}
+
+.bg-primary {
+  @apply bg-zinc-100 dark:bg-zinc-900;
+}
+
+.bg-secondary {
+  @apply bg-zinc-200 dark:bg-zinc-800;
+}
+
+.bg-tertiary {
+  @apply bg-zinc-300 dark:bg-zinc-700;
+}
+
+.text-primary {
+  @apply text-zinc-900 dark:text-zinc-50;
+}
+
+.text-secondary {
+  @apply text-zinc-600 dark:text-zinc-400;
+}
