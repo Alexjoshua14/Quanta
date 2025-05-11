@@ -83,8 +83,8 @@ export default function TodoList({ dateKey }: { dateKey: string }) {
    * to handle swipe left and right
    */
   const scrollPanGesture = Gesture.Pan()
-    .failOffsetX([-15, 15])
-    .activeOffsetY([-10, 10])
+    .failOffsetX([-12, 12])
+    .activeOffsetY([-8, 8])
     .onUpdate(({ translationY, translationX }) => {
       console.log("translationY", translationY)
       console.log("translationX", translationX)

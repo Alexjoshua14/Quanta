@@ -55,12 +55,30 @@ export default function TodoCard({
     deleteTodo(todo.date, todo.id);
   }
 
-  // TODO: Set up swipe gesture
+  /**
+   * Gestures to handle the todo card
+   */
 
-
-  const onLongPress = () => {
+  const onTap = () => {
     setOpen((prev) => !prev);
     runOnJS(Haptic.impactAsync)(Haptic.ImpactFeedbackStyle.Heavy);
+  }
+
+  const onDoubleTap = () => {
+    // Open todo in edit mode
+    console.log("TODO: Open todo in edit mode")
+
+    runOnJS(Haptic.impactAsync)(Haptic.ImpactFeedbackStyle.Rigid);
+    runOnJS(setTimeout)(() => {
+      runOnJS(Haptic.impactAsync)(Haptic.ImpactFeedbackStyle.Rigid);
+    }, 200);
+    runOnJS(setTimeout)(() => {
+      runOnJS(Haptic.impactAsync)(Haptic.ImpactFeedbackStyle.Rigid);
+    }, 400);
+  }
+
+  const onLongPress = () => {
+    onToggle(todo.id);
   }
 
   const onSwipeLeft = () => {
@@ -68,12 +86,14 @@ export default function TodoCard({
   }
 
   return (
-    <TodoCardGesture onTap={() => onToggle(todo.id)} onLongPress={onLongPress} onSwipeLeft={handleDelete} listRef={listRef} scrollGesture={scrollGesture}>
-      {/* <TouchableOpacity
-      onPress={() => setOpen((prev) => !prev)}
-      onLongPress={() => onToggle(todo.id)}
-      className=""
-    > */}
+    <TodoCardGesture
+      onTap={onTap}
+      onDoubleTap={onDoubleTap}
+      onLongPress={onLongPress}
+      onSwipeLeft={onSwipeLeft}
+      listRef={listRef}
+      scrollGesture={scrollGesture}
+    >
       <Animated.View
         layout={LinearTransition.springify().damping(10).stiffness(100)}
         style={{ backgroundColor: open ? backgroundColorSecondary : backgroundColor }}
@@ -100,7 +120,6 @@ export default function TodoCard({
           </Text>}
 
       </Animated.View>
-      {/* </TouchableOpacity> */}
       {/* TODO: MOVE this context menu to be like a little dropdown menu under note */}
       <Modal
         visible={contextMenuOpen}

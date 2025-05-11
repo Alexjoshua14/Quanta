@@ -8,8 +8,6 @@ import { Gesture, GestureDetector, SimultaneousGesture } from "react-native-gest
 import { GestureDetectorProps } from "react-native-gesture-handler/lib/typescript/handlers/gestures/GestureDetector";
 import Animated, {
   Easing,
-  Extrapolate,
-  interpolate,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
@@ -40,7 +38,8 @@ type TodoCardGestureProps = {
 
 // Gesture configuration
 const SWIPE_THRESHOLD = 50;
-const MAX_SWIPE_DISTANCE = 120;
+const MAX_SWIPE_DISTANCE = 60;
+
 const RESISTANCE_FACTOR = 0.3;
 const SPRING_CONFIG = {
   damping: 15,
@@ -64,6 +63,7 @@ const ANIMATION_CONFIG = {
 export const TodoCardGesture = ({
   children,
   onTap,
+  onDoubleTap,
   onSwipeLeft,
   onSwipeRight,
   onSwipeHorizontal,
@@ -84,7 +84,7 @@ export const TodoCardGesture = ({
    */
   const swipeHorizontal = Gesture.Pan()
     .failOffsetY([-10, 10])
-    .activeOffsetX([-15, 15])
+    .activeOffsetX([-12, 12])
     .onStart(() => {
       isPressed.value = true;
       // Subtle scale down on start
@@ -96,16 +96,9 @@ export const TodoCardGesture = ({
         ? 1 - (Math.abs(event.translationX) - MAX_SWIPE_DISTANCE) * RESISTANCE_FACTOR
         : 1;
 
-      translateX.value = event.translationX * resistance;
-
-      // Scale interpolation based on swipe distance
-      const progress = Math.abs(event.translationX) / MAX_SWIPE_DISTANCE;
-      scale.value = interpolate(
-        progress,
-        [0, 1],
-        [SWIPE_SCALE, 0.9],
-        Extrapolate.CLAMP
-      );
+      // Cap the translation at the max swipe distance in either direction
+      const translationDistance = Math.min(Math.max(event.translationX, -MAX_SWIPE_DISTANCE), MAX_SWIPE_DISTANCE);
+      translateX.value = translationDistance;
     })
     .onEnd((event) => {
       isPressed.value = false;
@@ -147,6 +140,14 @@ export const TodoCardGesture = ({
       console.log("tap end");
     })
 
+  const doubleTap = Gesture.Tap()
+    .numberOfTaps(2)
+    .onStart(() => {
+      onDoubleTap && runOnJS(onDoubleTap)();
+      console.log("double tap start");
+    })
+
+
   const longPress = Gesture.LongPress()
     .minDuration(500)
     .onStart(() => {
@@ -160,10 +161,11 @@ export const TodoCardGesture = ({
       console.log("long press end");
     });
 
-  const composedGesture = Gesture.Simultaneous(
+  const composedGesture = Gesture.Exclusive(
+    doubleTap,
     tap,
     longPress,
-    swipeHorizontal
+    swipeHorizontal,
   );
 
   const animatedViewStyle = useAnimatedStyle(() => {
