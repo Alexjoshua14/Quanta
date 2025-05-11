@@ -3,8 +3,8 @@
  */
 
 import * as Haptic from "expo-haptics";
-import { Dimensions } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { Dimensions, ScrollView } from "react-native";
+import { Gesture, GestureDetector, SimultaneousGesture } from "react-native-gesture-handler";
 import { GestureDetectorProps } from "react-native-gesture-handler/lib/typescript/handlers/gestures/GestureDetector";
 import Animated, {
   Easing,
@@ -34,6 +34,8 @@ type TodoCardGestureProps = {
   onLongPress?: () => void;
   onTap?: () => void;
   onDoubleTap?: () => void;
+  listRef?: React.RefObject<ScrollView | null>;
+  scrollGesture?: SimultaneousGesture;
 } & Omit<GestureDetectorProps, "gesture">;
 
 // Gesture configuration
@@ -66,6 +68,7 @@ export const TodoCardGesture = ({
   onSwipeRight,
   onSwipeHorizontal,
   onLongPress,
+  scrollGesture,
   ...props
 }: TodoCardGestureProps) => {
   // Shared values for animations
@@ -73,7 +76,15 @@ export const TodoCardGesture = ({
   const scale = useSharedValue(1);
   const isPressed = useSharedValue(false);
 
+  /**
+   * Swipe horizontal gesture
+   * Handles the swipe left and right gestures
+   * Fails on vertical pan to allow todo Cards 
+   * to handle pull down to add a todo gesture
+   */
   const swipeHorizontal = Gesture.Pan()
+    .failOffsetY([-10, 10])
+    .activeOffsetX([-15, 15])
     .onStart(() => {
       isPressed.value = true;
       // Subtle scale down on start
@@ -134,7 +145,7 @@ export const TodoCardGesture = ({
       scale.value = withSpring(1, SPRING_CONFIG);
       onTap && runOnJS(onTap)();
       console.log("tap end");
-    });
+    })
 
   const longPress = Gesture.LongPress()
     .minDuration(500)

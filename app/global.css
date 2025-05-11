@@ -39,8 +39,7 @@
 }
 
 .todo-note {
-  @apply text-sm 
-  /* text-gray-600 dark:text-neutral-300; */;
+  @apply text-sm text-gray-600 dark:text-neutral-300;
 }
 
 .bg-primary {

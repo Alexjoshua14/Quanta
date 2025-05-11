@@ -3,7 +3,8 @@ import { TodoCardGesture } from "@/gestures/TodoCardGesture";
 import { Todo, useTodos } from "@/store/useTodos";
 import * as Haptic from "expo-haptics";
 import React, { useEffect, useState } from "react";
-import { Modal, Pressable, StyleSheet, Text, useColorScheme, View } from "react-native";
+import { Modal, Pressable, ScrollView, StyleSheet, Text, useColorScheme, View } from "react-native";
+import { SimultaneousGesture } from "react-native-gesture-handler";
 import Animated, { LinearTransition, runOnJS } from "react-native-reanimated";
 
 
@@ -19,10 +20,14 @@ import Animated, { LinearTransition, runOnJS } from "react-native-reanimated";
  */
 export default function TodoCard({
   todo,
-  onToggle
+  onToggle,
+  listRef,
+  scrollGesture
 }: {
   todo: Todo;
   onToggle: (id: string) => void;
+  listRef?: React.RefObject<ScrollView | null>;
+  scrollGesture: SimultaneousGesture;
 }) {
   const [open, setOpen] = useState(false);
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
@@ -63,7 +68,7 @@ export default function TodoCard({
   }
 
   return (
-    <TodoCardGesture onTap={() => onToggle(todo.id)} onLongPress={onLongPress} onSwipeLeft={handleDelete}>
+    <TodoCardGesture onTap={() => onToggle(todo.id)} onLongPress={onLongPress} onSwipeLeft={handleDelete} listRef={listRef} scrollGesture={scrollGesture}>
       {/* <TouchableOpacity
       onPress={() => setOpen((prev) => !prev)}
       onLongPress={() => onToggle(todo.id)}

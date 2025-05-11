@@ -8,13 +8,14 @@
  * the modal is closed.
  */
 
+import { Colors } from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
 import { Recurrence, useTodos } from "@/store/useTodos";
 import { useRef, useState } from "react";
 import type { TextInput as RNTextInput } from 'react-native';
 import { Modal, SafeAreaView, Text, View } from "react-native";
 import { RadioButton, TextInput } from "react-native-paper";
 import RecurrenceButton from "./buttons/RecurrenceButton";
-
 
 // TODO: Add transitions so modal appears over 300ms and disappears over 300ms
 export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { visible: boolean, onDismiss: () => void, close: () => void, dateKey: string }) {
@@ -54,17 +55,21 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
     resetForm();
   };
 
+  const colorScheme = useColorScheme();
+  const backgroundColor = colorScheme === "dark" ? Colors.dark.background : Colors.light.background;
+
   return (
     <Modal visible={visible}>
-      <SafeAreaView className="flex-1 bg-primary">
-        <View className="flex todo-card">
+      <SafeAreaView className="flex-1" style={{ backgroundColor }}>
+        <View className="flex todo-card" style={{ backgroundColor }}>
           <TextInput
             label="Task"
             mode="flat"
             underlineStyle={{ display: "none" }}
             value={title}
             onChangeText={setTitle}
-            className="todo-title bg-primary"
+            className="todo-title"
+            style={{ backgroundColor }}
             onSubmitEditing={() => noteInputRef.current?.focus()}
             autoFocus={true}
             ref={titleInputRef}
@@ -80,7 +85,8 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
             numberOfLines={3}
             value={note}
             onChangeText={setNote}
-            className="todo-note bg-primary"
+            className="todo-note"
+            style={{ backgroundColor }}
             onSubmitEditing={save}
             ref={noteInputRef}
           />

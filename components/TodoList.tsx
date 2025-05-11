@@ -2,7 +2,7 @@ import { Colors } from "@/constants/Colors";
 import { Recurrence, Todo, useTodos } from "@/store/useTodos";
 import dayjs from "dayjs";
 import * as Haptic from "expo-haptics";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { StyleSheet, Text, useColorScheme, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -63,6 +63,8 @@ export default function TodoList({ dateKey }: { dateKey: string }) {
   const inputScrollValue = useSharedValue(INITIAL_Y_POSITION);
   const listScrollValue = useSharedValue(0)
 
+  const listRef = useRef<Animated.ScrollView>(null)
+
   const [isPanEnabled, setIsPanEnabled] = useState(true)
 
   const updatePanState = (offset: number) => {
@@ -74,8 +76,20 @@ export default function TodoList({ dateKey }: { dateKey: string }) {
     }
   }
 
+  /**
+   * Scroll pan gesture
+   * Handles the pull down to add a todo gesture
+   * Fails on horizontal pan to allow todo Cards 
+   * to handle swipe left and right
+   */
   const scrollPanGesture = Gesture.Pan()
-    .onUpdate(({ translationY }) => {
+    .failOffsetX([-15, 15])
+    .activeOffsetY([-10, 10])
+    .onUpdate(({ translationY, translationX }) => {
+      console.log("translationY", translationY)
+      console.log("translationX", translationX)
+      // Fail on horizontal pan to allow todo Cards to handle swipe left and right
+
       const smoothedTranslationY = translationY * 0.4
       if (translationY > 0) {  // Only handle downward pulls
         // Smoothen 
@@ -175,6 +189,7 @@ export default function TodoList({ dateKey }: { dateKey: string }) {
           bounces={false}
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
+          ref={listRef}
         >
           {
             todos ? todos.map(todo => (
@@ -182,6 +197,8 @@ export default function TodoList({ dateKey }: { dateKey: string }) {
                 key={todo.id}
                 todo={todo}
                 onToggle={handleToggle}
+                listRef={listRef}
+                scrollGesture={composedGesture}
               />
             )) : (
               <View className="flex-1 items-center justify-center">
