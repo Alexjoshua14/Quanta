@@ -1,9 +1,9 @@
 import { Colors } from "@/constants/Colors";
-import { Recurrence, Todo, useTodos } from "@/store/useTodos";
+import { useTodos } from "@/store/useTodos";
 import dayjs from "dayjs";
 import * as Haptic from "expo-haptics";
 import { useCallback, useRef, useState } from "react";
-import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import { Text, useColorScheme, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   clamp,
@@ -21,31 +21,6 @@ import TodoCard from "./TodoCard";
 const INITIAL_Y_POSITION = -50;
 const INITIAL_Y_SCROLL_POSITION = 0;
 const DELAY_RESET = 500;
-
-// Temp data
-const tempTodos: Todo[] = [
-  { id: "1", title: "Todo 1", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "2", title: "Todo 2", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "3", title: "Todo 3", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "4", title: "Todo 4", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "5", title: "Todo 5", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "6", title: "Todo 6", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "7", title: "Todo 7", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "8", title: "Todo 8", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "9", title: "Todo 9", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "10", title: "Todo 10", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "11", title: "Todo 11", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "12", title: "Todo 12", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "13", title: "Todo 13", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "14", title: "Todo 14", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "15", title: "Todo 15", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "16", title: "Todo 16", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "17", title: "Todo 17", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "18", title: "Todo 18", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "19", title: "Todo 19", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-  { id: "20", title: "Todo 20", completed: false, category: "Work", date: dayjs().format("YYYY-MM-DD"), recurrence: "daily" as Recurrence },
-]
-
 
 /**
  * A list of todos for a given date.
@@ -86,8 +61,6 @@ export default function TodoList({ dateKey }: { dateKey: string }) {
     .failOffsetX([-12, 12])
     .activeOffsetY([-8, 8])
     .onUpdate(({ translationY, translationX }) => {
-      console.log("translationY", translationY)
-      console.log("translationX", translationX)
       // Fail on horizontal pan to allow todo Cards to handle swipe left and right
 
       const smoothedTranslationY = translationY * 0.4
@@ -210,40 +183,6 @@ export default function TodoList({ dateKey }: { dateKey: string }) {
           }
         </Animated.ScrollView>
       </GestureDetector>
-
     </View>
-    // <FlatList
-    //   data={todos}
-    //   keyExtractor={(t) => t.id}
-    //   renderItem={({ item }) => (
-    //     <TodoCard
-    //       todo={item}
-    //       onToggle={handleToggle}
-    //     />
-    //   )}
-    //   ListEmptyComponent={
-    //     <View className="flex-1 items-center justify-center">
-    //       <Text className="text-2xl text-center text-gray-500 dark:text-neutral-400" style={{ fontFamily: "Commissioner" }}>
-    //         {`No todos for ${currentDate == dateKey ? "Today" : dateKey == dayjs().add(1, "day").format("YYYY-MM-DD") ? "Tomorrow" : dateKey}`}
-    //       </Text>
-    //       <Button title="Pull down to add a todo" onPress={() => { console.log("Add todo button pressed") }} />
-    //     </View>
-    //   }
-    // />
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  addTodoText: {
-    position: 'absolute',
-    marginTop: 20,
-    marginHorizontal: 16,
-  },
-  list: {
-    flex: 1,
-  },
-})

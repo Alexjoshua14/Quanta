@@ -57,6 +57,7 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
 
   const colorScheme = useColorScheme();
   const backgroundColor = colorScheme === "dark" ? Colors.dark.background : Colors.light.background;
+  const textColor = colorScheme === "dark" ? Colors.dark.text : Colors.light.text;
 
   return (
     <Modal visible={visible}>
@@ -69,7 +70,7 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
             value={title}
             onChangeText={setTitle}
             className="todo-title"
-            style={{ backgroundColor }}
+            style={{ backgroundColor, color: textColor }}
             onSubmitEditing={() => noteInputRef.current?.focus()}
             autoFocus={true}
             ref={titleInputRef}

@@ -7,7 +7,6 @@ import { Modal, Pressable, ScrollView, StyleSheet, Text, useColorScheme, View } 
 import { SimultaneousGesture } from "react-native-gesture-handler";
 import Animated, { LinearTransition, runOnJS } from "react-native-reanimated";
 
-
 /**
  * TodoCard component
  * 
@@ -31,9 +30,6 @@ export default function TodoCard({
 }) {
   const [open, setOpen] = useState(false);
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
-
-  const [todoTitle, setTodoTitle] = useState(todo.title);
-  const [todoNote, setTodoNote] = useState(todo.note);
 
   /** Theme colors */
   const colorScheme = useColorScheme();
@@ -77,12 +73,24 @@ export default function TodoCard({
     }, 400);
   }
 
+
   const onLongPress = () => {
-    onToggle(todo.id);
+    setContextMenuOpen(true);
+  }
+
+  const onForceTouch = async () => {
+    // Copy item to clipboard
+    const item = `${todo.title}\n${todo.note}`;
+    // Clipboard.setStringAsync(item);
+    console.log(`TODO: Copy item to clipboard: ${item}`);
   }
 
   const onSwipeLeft = () => {
     handleDelete();
+  }
+
+  const onSwipeRight = () => {
+    onToggle(todo.id);
   }
 
   return (
@@ -90,7 +98,9 @@ export default function TodoCard({
       onTap={onTap}
       onDoubleTap={onDoubleTap}
       onLongPress={onLongPress}
+      onForceTouch={onForceTouch}
       onSwipeLeft={onSwipeLeft}
+      onSwipeRight={onSwipeRight}
       listRef={listRef}
       scrollGesture={scrollGesture}
     >

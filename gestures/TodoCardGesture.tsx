@@ -32,6 +32,7 @@ type TodoCardGestureProps = {
   onLongPress?: () => void;
   onTap?: () => void;
   onDoubleTap?: () => void;
+  onForceTouch?: () => void;
   listRef?: React.RefObject<ScrollView | null>;
   scrollGesture?: SimultaneousGesture;
 } & Omit<GestureDetectorProps, "gesture">;
@@ -64,6 +65,7 @@ export const TodoCardGesture = ({
   children,
   onTap,
   onDoubleTap,
+  onForceTouch,
   onSwipeLeft,
   onSwipeRight,
   onSwipeHorizontal,
@@ -88,7 +90,7 @@ export const TodoCardGesture = ({
     .onStart(() => {
       isPressed.value = true;
       // Subtle scale down on start
-      scale.value = withSpring(SWIPE_SCALE, SPRING_CONFIG);
+      // scale.value = withSpring(SWIPE_SCALE, SPRING_CONFIG);
     })
     .onUpdate((event) => {
       // Apply resistance when exceeding max distance
@@ -161,10 +163,17 @@ export const TodoCardGesture = ({
       console.log("long press end");
     });
 
+  const forceTouch = Gesture.ForceTouch()
+    .onStart(() => {
+      onForceTouch && runOnJS(onForceTouch)();
+    })
+    .feedbackOnActivation(true)
+
   const composedGesture = Gesture.Exclusive(
     doubleTap,
     tap,
     longPress,
+    forceTouch,
     swipeHorizontal,
   );
 

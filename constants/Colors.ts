@@ -36,6 +36,7 @@ export const Colors = {
 
     // Surfaces
     background: "#1A1B1E", // matte obsidian
+    // background: "#fb6f92", // pink
     backgroundSecondary: "#272724", // card / sheet
 
     // Accents
