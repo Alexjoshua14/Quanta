@@ -138,7 +138,7 @@ export const useTodos = create<State>()(
                     ...todos,
                     {
                       ...todo,
-                      id: crypto.randomUUID(),
+                      id: Crypto.randomUUID(),
                       date: newDate,
                       completed: false,
                     },

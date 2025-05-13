@@ -170,11 +170,11 @@ export const TodoCardGesture = ({
     .feedbackOnActivation(true)
 
   const composedGesture = Gesture.Exclusive(
+    swipeHorizontal,
     doubleTap,
     tap,
     longPress,
     forceTouch,
-    swipeHorizontal,
   );
 
   const animatedViewStyle = useAnimatedStyle(() => {
