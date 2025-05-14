@@ -10,4 +10,4 @@ jobs:
     type: build
     params:
       platform: ios
-      profile: preview
+      profile: previ
