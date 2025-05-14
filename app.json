@@ -3,6 +3,7 @@
     "name": "quanta",
     "slug": "quanta",
     "version": "1.0.0",
+    "owner": "alexjoshua14",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "quanta",
