@@ -2,16 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
+/* CSS variables are set by the Provider component */
+:root {
+  /* These variables will be set by React Native's style system */
+  /* Colors need to be updated here and in the theme/tokens.ts file */
+  --color-primary: #3f3d34;
+  --color-secondary: #687076;
+  --color-background: #f6f1e9;
+  --color-background-secondary: #fffdfc;
+  --color-tint: #8b5e34;
+  --color-accent: #6d8a5b;
+  --color-icon: #687076;
+  --color-tab-icon-default: #687076;
+  --color-tab-icon-selected: #8b5e34;
+}
+
+/* Dark mode variables */
+[data-theme="dark"] {
+  --color-primary: #e8e4d9;
+  --color-secondary: #9ba1a6;
+  --color-background: #1e1f1d;
+  --color-background-secondary: #272724;
+  --color-tint: #c6a27a;
+  --color-accent: #7fa16e;
+  --color-icon: #9ba1a6;
+  --color-tab-icon-default: #9ba1a6;
+  --color-tab-icon-selected: #c6a27a;
+}
+
 /**
 * Each screen should take up the full screen but
 * have padding for iPhone notch
 */
 .screen {
-  @apply flex-1 bg-white dark:bg-black pb-20;
+  @apply flex-1 pb-20 bg-primary;
 }
 
 .screen-header {
-  @apply text-2xl text-center text-gray-500 dark:text-neutral-400;
+  @apply text-2xl text-center text-secondary;
 }
 
 /**
@@ -27,37 +55,37 @@
 * Set the font family and make space for the tab bar
 */
 .screen {
-  @apply font-commissioner font-bold bg-slate-300 pb-24;
+  @apply font-commissioner font-bold pb-24 bg-background;
 }
 
 .todo-title {
-  @apply text-lg font-light dark:text-white;
+  @apply text-lg font-light text-primary;
 }
 
 .todo-card {
-  @apply p-4;
+  @apply p-4 bg-primary text-primary;
 }
 
 .todo-note {
-  @apply text-sm text-gray-600 dark:text-neutral-300;
+  @apply text-sm text-secondary;
 }
 
 .bg-primary {
-  @apply bg-zinc-100 dark:bg-zinc-900;
+  background-color: var(--color-background);
 }
 
 .bg-secondary {
-  @apply bg-zinc-200 dark:bg-zinc-800;
+  background-color: var(--color-background-secondary);
 }
 
 .bg-tertiary {
-  @apply bg-zinc-300 dark:bg-zinc-700;
+  background-color: var(--color-tint);
 }
 
 .text-primary {
-  @apply text-zinc-900 dark:text-zinc-50;
+  color: var(--color-primary);
 }
 
 .text-secondary {
-  @apply text-zinc-600 dark:text-zinc-400;
+  color: var(--color-secondary);
 }

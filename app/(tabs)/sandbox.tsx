@@ -17,8 +17,8 @@ export default function Sandbox() {
 
   const fonts = getLoadedFonts()
   return (
-    <View className="flex-1 items-center justify-center">
-      <Text style={{ fontFamily: "Commissioner", color: textColor }}>Loaded Fonts</Text>
+    <View className="flex-1 items-center justify-center bg-background">
+      <Text style={{ fontFamily: "Commissioner" }}>Loaded Fonts</Text>
       {fonts.map((font) => (
         <Text key={font}>{font}</Text>
       ))}

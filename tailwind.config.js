@@ -8,36 +8,15 @@ export default {
         commissioner: ["Commissioner"],
       },
       colors: {
-        viridian: "#093228",
-        background: {
-          light: "#F6F1E9",
-          dark: "#1A1B1E",
-        },
-        text: {
-          light: "#3F3D34",
-          dark: "#F6F1E9",
-        },
-        textSecondary: {
-          light: "#9BA1A6",
-          dark: "#3F3D34",
-        },
-        canvas: {
-          light: "#F6F1E9",
-          dark: "#1A1B1E",
-        },
-        card: {
-          light: "#FFFDFC",
-          dark: "#272724",
-        },
-        brand: {
-          // primary rustic-brown scale
-          500: "#8B5E34",
-          600: "#C6A27A", // lighter for dark mode
-        },
-        accent: {
-          light: "#6D8A5B",
-          dark: "#7FA16E",
-        },
+        primary: "var(--color-primary)",
+        secondary: "var(--color-secondary)",
+        background: "var(--color-background)",
+        "background-secondary": "var(--color-background-secondary)",
+        tint: "var(--color-tint)",
+        accent: "var(--color-accent)",
+        icon: "var(--color-icon)",
+        "tab-icon-default": "var(--color-tab-icon-default)",
+        "tab-icon-selected": "var(--color-tab-icon-selected)",
       },
     },
   },

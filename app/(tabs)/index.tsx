@@ -1,5 +1,4 @@
 import TodoList from "@/components/TodoList";
-import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import dayjs from "dayjs";
 import { useCallback, useState } from "react";
@@ -21,13 +20,10 @@ export default function Today() {
   /** Theme colors */
   const colorScheme = useColorScheme();
 
-  const backgroundColor = colorScheme === "dark" ? Colors.dark.background : Colors.light.background;
-
   return (
     <SafeAreaView
       edges={["top", "left", "right"]}
-      style={{ backgroundColor }}
-      className="flex-1"
+      className="flex-1 bg-background"
     >
       <TodoList dateKey={dateKey} />
     </SafeAreaView>

@@ -1,9 +1,8 @@
-import { Colors } from "@/constants/Colors";
 import { TodoCardGesture } from "@/gestures/TodoCardGesture";
 import { Todo, useTodos } from "@/store/useTodos";
 import * as Haptic from "expo-haptics";
-import React, { useEffect, useState } from "react";
-import { Modal, Pressable, ScrollView, StyleSheet, Text, useColorScheme, View } from "react-native";
+import React, { useState } from "react";
+import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SimultaneousGesture } from "react-native-gesture-handler";
 import Animated, { LinearTransition, runOnJS } from "react-native-reanimated";
 
@@ -30,18 +29,6 @@ export default function TodoCard({
 }) {
   const [open, setOpen] = useState(false);
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
-
-  /** Theme colors */
-  const colorScheme = useColorScheme();
-  const [textColor, setTextColor] = useState(colorScheme === "dark" ? Colors.dark.text : Colors.light.text);
-  const [textColorSecondary, setTextColorSecondary] = useState(colorScheme === "dark" ? Colors.dark.textSecondary : Colors.light.textSecondary);
-  const [backgroundColor, setBackgroundColor] = useState(colorScheme === "dark" ? Colors.dark.background : Colors.light.background);
-  const [backgroundColorSecondary, setBackgroundColorSecondary] = useState(colorScheme === "dark" ? Colors.dark.backgroundSecondary : Colors.light.backgroundSecondary);
-
-  useEffect(() => {
-    setTextColor(colorScheme === "dark" ? Colors.dark.text : Colors.light.text);
-    setTextColorSecondary(colorScheme === "dark" ? Colors.dark.textSecondary : Colors.light.textSecondary);
-  }, [colorScheme]);
 
 
   // Enable swipe to delete
@@ -106,12 +93,10 @@ export default function TodoCard({
     >
       <Animated.View
         layout={LinearTransition.springify().damping(10).stiffness(100)}
-        style={{ backgroundColor: open ? backgroundColorSecondary : backgroundColor }}
         className={`todo-card ${todo.completed ? "opacity-50" : "opacity-100"
           }`}
       >
         <Text
-          style={{ color: textColor }}
           className={`todo-title ${todo.completed ? "line-through" : ""
             }`}
         >
@@ -120,7 +105,6 @@ export default function TodoCard({
 
         {todo.note &&
           <Text
-            style={{ color: textColorSecondary }}
             className={`todo-note 
               ${open ? "" : "line-clamp-1 text-ellipsis"}
               ${todo.completed ? "line-through" : ""}
@@ -140,7 +124,6 @@ export default function TodoCard({
         <Pressable style={styles.backdrop} onPress={() => setContextMenuOpen(false)} />
         <View style={[
           styles.menu,
-          { backgroundColor: colorScheme === "dark" ? Colors.dark.backgroundSecondary : Colors.light.backgroundSecondary }
         ]}>
           <Pressable onPress={() => { onToggle(todo.id); setContextMenuOpen(false); }}>
             <Text style={styles.menuItem}>Toggle Complete</Text>

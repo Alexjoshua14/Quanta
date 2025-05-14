@@ -8,8 +8,6 @@
  * the modal is closed.
  */
 
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { Recurrence, useTodos } from "@/store/useTodos";
 import { useRef, useState } from "react";
 import type { TextInput as RNTextInput } from 'react-native';
@@ -55,22 +53,17 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
     resetForm();
   };
 
-  const colorScheme = useColorScheme();
-  const backgroundColor = colorScheme === "dark" ? Colors.dark.background : Colors.light.background;
-  const textColor = colorScheme === "dark" ? Colors.dark.text : Colors.light.text;
-
   return (
     <Modal visible={visible}>
-      <SafeAreaView className="flex-1" style={{ backgroundColor }}>
-        <View className="flex todo-card" style={{ backgroundColor }}>
+      <SafeAreaView className="flex-1 bg-primary">
+        <View className="flex todo-card">
           <TextInput
             label="Task"
             mode="flat"
             underlineStyle={{ display: "none" }}
             value={title}
             onChangeText={setTitle}
-            className="todo-title"
-            style={{ backgroundColor, color: textColor }}
+            className="todo-title bg-primary"
             onSubmitEditing={() => noteInputRef.current?.focus()}
             autoFocus={true}
             ref={titleInputRef}
@@ -86,8 +79,7 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
             numberOfLines={3}
             value={note}
             onChangeText={setNote}
-            className="todo-note"
-            style={{ backgroundColor }}
+            className="todo-note bg-primary"
             onSubmitEditing={save}
             ref={noteInputRef}
           />
