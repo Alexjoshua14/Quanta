@@ -43,7 +43,11 @@ export interface Subtask {
  */
 interface State {
   todos: Record<string, Todo[]>;
-  addTodo: (todo: Omit<Todo, "id" | "completed">) => void;
+  addTodo: (
+    todo: Omit<Todo, "id" | "completed" | "subtasks"> & {
+      subtasks: Omit<Subtask, "id" | "completed">[];
+    }
+  ) => void;
   deleteTodo: (date: string, id: string) => void;
   updateTodo: (date: string, id: string, todo: Todo) => void;
   toggle: (date: string, id: string) => void;
@@ -59,7 +63,12 @@ export const useTodos = create<State>()(
   persist(
     (set) => ({
       todos: {},
-      addTodo: (todo: Omit<Todo, "id" | "completed">) => {
+      // Add a todo with subtasks supplied as partial subtask objects, just including title
+      addTodo: (
+        todo: Omit<Todo, "id" | "completed" | "subtasks"> & {
+          subtasks: Omit<Subtask, "id" | "completed">[];
+        }
+      ) => {
         set((state) => {
           const date = dayjs(todo.date).format("YYYY-MM-DD");
           const currentTodos = state.todos[date] || [];
@@ -67,6 +76,11 @@ export const useTodos = create<State>()(
             ...todo,
             id: Crypto.randomUUID(),
             completed: false,
+            subtasks: todo.subtasks.map((subtask) => ({
+              ...subtask,
+              id: Crypto.randomUUID(),
+              completed: false,
+            })),
           };
 
           return {

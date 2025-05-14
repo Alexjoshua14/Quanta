@@ -8,7 +8,7 @@
  * the modal is closed.
  */
 
-import { Recurrence, useTodos } from "@/store/useTodos";
+import { Recurrence, Subtask, useTodos } from "@/store/useTodos";
 import { Palette } from "@/theme/tokens";
 import * as Haptics from "expo-haptics";
 import { useRef, useState } from "react";
@@ -22,6 +22,7 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
 
   const [title, setTitle] = useState("");
   const [note, setNote] = useState("");
+  const [subtasks, setSubtasks] = useState<Omit<Subtask, "id" | "completed">[]>([]);
   const [category, setCategory] = useState("");
   const [recurrence, setRecurrence] = useState<Recurrence>("none");
 
@@ -33,6 +34,7 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
   const resetForm = () => {
     setTitle("");
     setNote("");
+    setSubtasks([]);
     setCategory("");
     setRecurrence("none");
   }
@@ -50,12 +52,13 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
       title,
       note,
       category,
+      subtasks,
       date: dateKey,
       recurrence,
     });
 
-    close();
     resetForm();
+    close();
   };
 
   const colorScheme = useColorScheme();
@@ -96,7 +99,15 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
             ref={noteInputRef}
             style={{ color: textColor, backgroundColor: backgroundColor }}
           />
-
+          {/* Add subtask as expanding list of text inputs */}
+          {/* {subtasks.map((subtask, index) => (
+            <TextInput
+              key={`subtask-${index}`}
+              label={subtask.title}
+              value={subtask.title}
+              onChangeText={(text) => setSubtasks(subtasks.map((s) => s.id === subtask.id ? { ...s, title: text } : s))}
+            />
+          ))} */}
           <RadioButton.Group
             onValueChange={(val) => setRecurrence(val as Recurrence)}
             value={recurrence}
