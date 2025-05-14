@@ -1,50 +1,108 @@
-# Welcome to your Expo app 👋
+# Quanta
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+_A gesture-driven, offline-first task manager built with Expo & React Native._
 
-## Get started
+---
 
-1. Install dependencies
+## ✨ Features
 
-   ```bash
-   npm install
-   ```
+- **Swipe‑down** to add a task.
+- **Swipe‑right** to delete, **long‑press + drag** to re‑order.
+- **Swipe-left** to mark tasks complete.
+- **Tap** to open details.
+- **Dark ↔ Light** theme powered by unified design tokens (NativeWind + React‑Native‑Paper).
+- **Offline‑first** persistence via `AsyncStorage`; OTA JS updates through EAS Update.
+- Automatic **internal builds** on every `main` push (GitHub → EAS Build).
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 🏗 Architecture
 
-In the output, you'll find options to open the app in a
+### Build & Delivery Pipeline
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+```mermaid
+git push main
+      │
+      ▼
+EAS Workflow
+(eas build --profile preview)
+      │
+      ▼
+EAS Build Cloud  ──►  Signed iOS .ipa  ──►  Install link / QR
+                             │
+                             ▼
+                      OTA updates via
+           eas update --branch preview
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## 🧰 Tech Stack
 
-To learn more about developing your project with Expo, look at the following resources:
+| Layer & Purpose | Libraries / Tools                              |
+| --------------- | ---------------------------------------------- |
+| UI & Navigation | Expo SDK 50, Expo Router / React‑Navigation 7  |
+| Gestures        | React‑Native‑Gesture‑Handler 3, Reanimated 3   |
+| State & Storage | Zustand + persist → AsyncStorage               |
+| Styling         | NativeWind (Tailwind) + React‑Native‑Paper MD3 |
+| Build / CI      | EAS Build Cloud, GitHub Actions                |
+| Tests           | Jest (unit); Detox (E2E – roadmap)             |
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+## 🚀 Getting Started
 
-Join our community of developers creating universal apps.
+```bash
+# Clone & install
+git clone https://github.com/alexjoshua14/quanta && cd quanta
+bun install          # or npm / yarn / pnpm
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+# Dev‑client with hot‑reload
+bunx expo run:ios     # or :android
+bunx expo start --tunnel
+```
+
+### Unit tests
+
+```bash
+bun run test
+```
+
+---
+
+## 🛠 Building Signed Apps
+
+```bash
+# Internal (preview) iOS build  →  install link
+eas build -p ios --profile preview
+eas build:install --platform ios --latest
+```
+
+> **JS‑only fixes:** `eas update --branch preview -m "fix swipe jitter"`  
+> Devices on the preview channel update instantly.
+
+---
+
+## 🗺 Roadmap
+
+- [ ] Subtask support
+- [ ] Push‑notification reminders
+- [ ] Cloud sync (Supabase)
+- [ ] Smart reminders (e.g., location based)
+- [ ] Web companion (Next.js + Expo Router Web)
+- [ ] AI Integrations
+
+---
+
+## 🤝 Contributing
+
+1. **Fork** → create a branch (`feat/your-feature`).
+2. `bun run lint && bun run test` before PR.
+3. Follow Conventional Commits; CI will lint, test, and build a preview install.
+
+---
+
+## 📝 License
+
+MIT © 2025 Alex Joshua
