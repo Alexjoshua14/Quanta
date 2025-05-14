@@ -24,7 +24,15 @@ export interface Todo {
   date: string;
   recurrence: Recurrence;
   completed: boolean;
+  subtasks?: Subtask[];
 }
+
+export interface Subtask {
+  id: string;
+  title: string;
+  completed: boolean;
+}
+
 /**
  * State interface
  * @description The state of the todos
@@ -69,6 +77,33 @@ export const useTodos = create<State>()(
           };
         });
       },
+      addSubtask: (
+        date: string,
+        todoId: string,
+        subtask: Omit<Subtask, "id" | "completed">
+      ) => {
+        set((state) => {
+          const currentTodos = state.todos[date] || [];
+          const newSubtask = {
+            ...subtask,
+            id: Crypto.randomUUID(),
+            completed: false,
+          };
+
+          const updatedTodos = currentTodos.map((todo) =>
+            todo.id === todoId
+              ? { ...todo, subtasks: [...(todo.subtasks || []), newSubtask] }
+              : todo
+          );
+
+          return {
+            todos: {
+              ...state.todos,
+              [date]: updatedTodos,
+            },
+          };
+        });
+      },
       deleteTodo: (date: string, id: string) => {
         set((state) => {
           const currentTodos = state.todos[date] || [];
@@ -76,11 +111,52 @@ export const useTodos = create<State>()(
           return { todos: { ...state.todos, [date]: updatedTodos } };
         });
       },
+      deleteSubtask: (date: string, todoId: string, subtaskId: string) => {
+        set((state) => {
+          const currentTodos = state.todos[date] || [];
+          const updatedTodos = currentTodos.map((todo) =>
+            todo.id === todoId
+              ? {
+                  ...todo,
+                  subtasks: todo.subtasks?.filter((s) => s.id !== subtaskId),
+                }
+              : todo
+          );
+
+          return {
+            todos: {
+              ...state.todos,
+              [date]: updatedTodos,
+            },
+          };
+        });
+      },
       updateTodo: (date: string, id: string, todo: Todo) => {
         set((state) => {
           const currentTodos = state.todos[date] || [];
           const updatedTodos = currentTodos.map((t) =>
             t.id === id ? todo : t
+          );
+          return { todos: { ...state.todos, [date]: updatedTodos } };
+        });
+      },
+      updateSubtask: (
+        date: string,
+        todoId: string,
+        subtaskId: string,
+        subtask: Subtask
+      ) => {
+        set((state) => {
+          const currentTodos = state.todos[date] || [];
+          const updatedTodos = currentTodos.map((todo) =>
+            todo.id === todoId
+              ? {
+                  ...todo,
+                  subtasks: todo.subtasks?.map((s) =>
+                    s.id === subtaskId ? subtask : s
+                  ),
+                }
+              : todo
           );
           return { todos: { ...state.todos, [date]: updatedTodos } };
         });
@@ -100,6 +176,22 @@ export const useTodos = create<State>()(
           };
         });
       },
+      toggleSubtask: (date: string, todoId: string, subtaskId: string) => {
+        set((state) => {
+          const currentTodos = state.todos[date] || [];
+          const updatedTodos = currentTodos.map((todo) =>
+            todo.id === todoId
+              ? {
+                  ...todo,
+                  subtasks: todo.subtasks?.map((s) =>
+                    s.id === subtaskId ? { ...s, completed: !s.completed } : s
+                  ),
+                }
+              : todo
+          );
+          return { todos: { ...state.todos, [date]: updatedTodos } };
+        });
+      },
       cleanupRecurrences: () => {
         set((state) => {
           const today = dayjs().format("YYYY-MM-DD");
@@ -115,6 +207,7 @@ export const useTodos = create<State>()(
 
               const shouldCopy = todo.date < today && !todo.completed;
 
+              // TODO: Clean this up and make sure it actually works logic might have holes
               const isWeekdayRule =
                 todo.recurrence === "weekdays" &&
                 ![0, 6].includes(dayjs(todo.date).day());
