@@ -1,8 +1,9 @@
 import { TodoCardGesture } from "@/gestures/TodoCardGesture";
 import { Todo, useTodos } from "@/store/useTodos";
+import { Palette } from "@/theme/tokens";
 import * as Haptic from "expo-haptics";
 import React, { useState } from "react";
-import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Modal, Pressable, ScrollView, StyleSheet, Text, useColorScheme, View } from "react-native";
 import { SimultaneousGesture } from "react-native-gesture-handler";
 import Animated, { LinearTransition, runOnJS } from "react-native-reanimated";
 
@@ -80,6 +81,13 @@ export default function TodoCard({
     onToggle(todo.id);
   }
 
+  const colorScheme = useColorScheme();
+
+  const backgroundColor = colorScheme === "dark" ? Palette.dark.background : Palette.light.background;
+  const backgroundColorSecondary = colorScheme === "dark" ? Palette.dark.backgroundSecondary : Palette.light.backgroundSecondary;
+  const textColor = colorScheme === "dark" ? Palette.dark.primary : Palette.light.primary;
+  const textColorSecondary = colorScheme === "dark" ? Palette.dark.secondary : Palette.light.secondary;
+
   return (
     <TodoCardGesture
       onTap={onTap}
@@ -95,10 +103,12 @@ export default function TodoCard({
         layout={LinearTransition.springify().damping(10).stiffness(100)}
         className={`todo-card ${todo.completed ? "opacity-50" : "opacity-100"
           }`}
+        style={{ backgroundColor }}
       >
         <Text
           className={`todo-title ${todo.completed ? "line-through" : ""
             }`}
+          style={{ color: textColor }}
         >
           {todo.title}
         </Text>
@@ -109,6 +119,7 @@ export default function TodoCard({
               ${open ? "" : "line-clamp-1 text-ellipsis"}
               ${todo.completed ? "line-through" : ""}
               `}
+            style={{ color: textColorSecondary }}
           >
             {todo.note}
           </Text>}
@@ -124,12 +135,14 @@ export default function TodoCard({
         <Pressable style={styles.backdrop} onPress={() => setContextMenuOpen(false)} />
         <View style={[
           styles.menu,
-        ]}>
+          { backgroundColor: backgroundColorSecondary }
+        ]}
+        >
           <Pressable onPress={() => { onToggle(todo.id); setContextMenuOpen(false); }}>
-            <Text style={styles.menuItem}>Toggle Complete</Text>
+            <Text style={[styles.menuItem, { color: textColor }]}>Toggle Complete</Text>
           </Pressable>
           <Pressable onPress={() => { handleDelete(); setContextMenuOpen(false); }}>
-            <Text style={[styles.menuItem, styles.danger]}>Delete</Text>
+            <Text style={[styles.menuItem, styles.danger, { color: textColor }]}>Delete</Text>
           </Pressable>
         </View>
       </Modal>

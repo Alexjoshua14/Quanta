@@ -9,10 +9,11 @@
  */
 
 import { Recurrence, useTodos } from "@/store/useTodos";
+import { Palette } from "@/theme/tokens";
 import * as Haptics from "expo-haptics";
 import { useRef, useState } from "react";
 import type { TextInput as RNTextInput } from 'react-native';
-import { Modal, SafeAreaView, Text, View } from "react-native";
+import { Modal, SafeAreaView, Text, useColorScheme, View } from "react-native";
 import { RadioButton, TextInput } from "react-native-paper";
 import RecurrenceButton from "./buttons/RecurrenceButton";
 // TODO: Add transitions so modal appears over 300ms and disappears over 300ms
@@ -57,20 +58,27 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
     resetForm();
   };
 
+  const colorScheme = useColorScheme();
+  const backgroundColor = colorScheme === "dark" ? Palette.dark.background : Palette.light.background;
+  const textColor = colorScheme === "dark" ? Palette.dark.primary : Palette.light.primary;
+  const textColorSecondary = colorScheme === "dark" ? Palette.dark.secondary : Palette.light.secondary;
+
+
   return (
     <Modal visible={visible}>
-      <SafeAreaView className="flex-1 bg-primary">
-        <View className="flex todo-card">
+      <SafeAreaView className="flex-1" style={{ backgroundColor }}>
+        <View className="flex todo-card" style={{ backgroundColor }}>
           <TextInput
             label="Task"
             mode="flat"
             underlineStyle={{ display: "none" }}
             value={title}
             onChangeText={setTitle}
-            className="todo-title bg-primary"
+            className="todo-title"
             onSubmitEditing={() => noteInputRef.current?.focus()}
             autoFocus={true}
             ref={titleInputRef}
+            style={{ color: textColor, backgroundColor: backgroundColor }}
           />
           <TextInput
             label="Notes (optional)"
@@ -83,9 +91,10 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
             numberOfLines={3}
             value={note}
             onChangeText={setNote}
-            className="todo-note bg-primary"
+            className="todo-note"
             onSubmitEditing={save}
             ref={noteInputRef}
+            style={{ color: textColor, backgroundColor: backgroundColor }}
           />
 
           <RadioButton.Group
@@ -102,7 +111,9 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
                         ${opt == recurrence ? "text-gray-600" : "text-gray-400"}
                       `}
                   >
-                    <Text className={`${opt == recurrence ? "text-gray-600" : "text-gray-400"}`}>
+                    <Text
+                      style={{ color: opt == recurrence ? textColor : textColorSecondary }}
+                    >
                       {opt.charAt(0).toUpperCase() + opt.slice(1)}
                     </Text>
                   </RecurrenceButton>

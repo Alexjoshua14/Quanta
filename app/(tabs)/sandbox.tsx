@@ -9,6 +9,7 @@ import { Text } from "react-native-paper";
 export default function Sandbox() {
   // function to change theme
   const colorScheme = useColorScheme();
+  const backgroundColor = colorScheme === "dark" ? Colors.dark.background : Colors.light.background;
   const textColor = colorScheme === "dark" ? Colors.dark.text : Colors.light.text;
   const textColorSecondary = colorScheme === "dark" ? Colors.dark.textSecondary : Colors.light.textSecondary;
 
@@ -17,12 +18,12 @@ export default function Sandbox() {
 
   const fonts = getLoadedFonts()
   return (
-    <View className="flex-1 items-center justify-center bg-background">
-      <Text style={{ fontFamily: "Commissioner" }}>Loaded Fonts</Text>
+    <View className="flex-1 items-center justify-center" style={{ backgroundColor }}>
+      <Text style={{ fontFamily: "Commissioner", color: textColor }}>Loaded Fonts</Text>
       {fonts.map((font) => (
-        <Text key={font}>{font}</Text>
+        <Text key={font} style={{ color: textColor }}>{font}</Text>
       ))}
-      <Text>Current Theme: {colorScheme === "dark" ? "Dark" : "Light"}</Text>
+      <Text style={{ color: textColor }}>Current Theme: {colorScheme === "dark" ? "Dark" : "Light"}</Text>
     </View>
   )
 }

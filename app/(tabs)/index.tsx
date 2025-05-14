@@ -20,10 +20,14 @@ export default function Today() {
   /** Theme colors */
   const colorScheme = useColorScheme();
 
+  const backgroundColor = colorScheme === "dark" ? "#1E1F1D" : "#F6F1E9";
+  const textColor = colorScheme === "dark" ? "#E8E4D9" : "#1E1F1D";
+
   return (
     <SafeAreaView
       edges={["top", "left", "right"]}
-      className="flex-1 bg-background"
+      className="flex-1"
+      style={{ backgroundColor }}
     >
       <TodoList dateKey={dateKey} />
     </SafeAreaView>

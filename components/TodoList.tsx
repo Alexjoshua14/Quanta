@@ -146,7 +146,7 @@ export default function TodoList({ dateKey }: { dateKey: string }) {
 
 
   return (
-    <View className="flex-1 p-4">
+    <View className="flex-1 p-4" style={{ backgroundColor }}>
       <AddTodoModal visible={addTodoModalVisible} onDismiss={() => { }} close={closeModal} dateKey={dateKey} />
       <Animated.Text
         style={[addTodoTextAnimatedStyle, { color: textColorSecondary }]}
