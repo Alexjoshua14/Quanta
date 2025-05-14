@@ -9,12 +9,12 @@
  */
 
 import { Recurrence, useTodos } from "@/store/useTodos";
+import * as Haptics from "expo-haptics";
 import { useRef, useState } from "react";
 import type { TextInput as RNTextInput } from 'react-native';
 import { Modal, SafeAreaView, Text, View } from "react-native";
 import { RadioButton, TextInput } from "react-native-paper";
 import RecurrenceButton from "./buttons/RecurrenceButton";
-
 // TODO: Add transitions so modal appears over 300ms and disappears over 300ms
 export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { visible: boolean, onDismiss: () => void, close: () => void, dateKey: string }) {
   const add = useTodos((s) => s.addTodo);
@@ -40,7 +40,11 @@ export default function AddTodoModal({ visible, onDismiss, close, dateKey }: { v
     if (!title.trim() && !note.trim()) {
       close();
       return;
-    };
+    } else if (title.trim() === "") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      titleInputRef.current?.focus();
+      return;
+    }
     add({
       title,
       note,
